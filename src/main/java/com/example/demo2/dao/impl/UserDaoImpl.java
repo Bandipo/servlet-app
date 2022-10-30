@@ -8,6 +8,7 @@ import com.mysql.cj.util.StringUtils;
 import lombok.NonNull;
 
 import java.sql.*;
+import java.time.LocalDate;
 
 public class UserDaoImpl implements UserDao {
     final static String USER_INSERT_SQL = "insert into users (first_name, last_name, email, password, dob) " + "values (?,?,?,?,?)";
@@ -49,29 +50,38 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean existsUserByEmailAndPassword(@NonNull String email, @NonNull String password) {
+    public User findUserByEmailAndPassword(@NonNull String email, @NonNull String password) {
 
-       boolean  returnType = false;
-
-       long foundId = 0;
-        String foundEmail = null;
-        String foundPassword = null;
+       User foundUser = null;
 
         try(Connection connection = DataBaseConnection.INSTANCE.getDatasource().getConnection();){
 
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USE_BY_USENAME_AND_PASSWORD);
 
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, password);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while(resultSet.next()){
-              foundId = resultSet.getLong("id");
-             foundEmail =      resultSet.getString("email");
-             foundPassword =   resultSet.getString("password");
+            long  foundId = resultSet.getLong("id");
+                String first_name = resultSet.getString("first_name");
+                String lastName = resultSet.getString("last_name");
+                String  foundEmail =      resultSet.getString("email");
+                String  foundPassword =   resultSet.getString("password");
+                LocalDate date = resultSet.getDate("dob").toLocalDate();
+
+                foundUser = User.builder()
+                        .id(foundId)
+                        .firstName(first_name)
+                        .lastName(lastName)
+                        .email(foundEmail)
+                        .password(foundPassword)
+                        .dob(date)
+                        .build();
+
             }
 
-            System.out.println(foundEmail);
 
-            System.out.println(foundPassword);
 
         }catch (Exception e){
             System.out.println(e.getMessage());
@@ -80,6 +90,6 @@ public class UserDaoImpl implements UserDao {
 
 
 
-        return foundId > 0;
+        return foundUser;
     }
 }

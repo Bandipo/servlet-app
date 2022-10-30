@@ -2,6 +2,7 @@ package com.example.demo2.controllers;
 
 import com.example.demo2.dao.UserDao;
 import com.example.demo2.dao.impl.UserDaoImpl;
+import com.example.demo2.models.User;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -10,7 +11,7 @@ import java.io.IOException;
 
 @WebServlet(name = "LoginServlet", value = "/login")
 public class LoginServlet extends HttpServlet {
-   private  static UserDao userDao = new UserDaoImpl();
+   private  static final UserDao userDao = new UserDaoImpl();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -20,13 +21,27 @@ public class LoginServlet extends HttpServlet {
 
         String password = request.getParameter("password");
 
-
+        System.out.println(email);
+        System.out.println(password);
 
         // validate if the user exists in Database
 
-        boolean isUserExist = userDao.existsUserByEmailAndPassword(email, password);
+       User foundUser = userDao.findUserByEmailAndPassword(email, password);
 
-        System.out.println("user exists: "+ isUserExist);
+
+
+        // store the user in session
+
+       if(foundUser != null){
+           HttpSession requestSession = request.getSession();
+
+           requestSession.setAttribute("loggedUser", foundUser);
+       }
+
+        // redirect to dashboard.jsp
+
+        request.getRequestDispatcher("/dashboard.jsp")
+                .forward(request, response);
 
     }
 

@@ -8,5 +8,5 @@ public interface UserDao {
 
     User saveUser(UserDto userDto);
 
-    boolean existsUserByEmailAndPassword(@NonNull String email,  @NonNull String password);
+    User findUserByEmailAndPassword(@NonNull String email, @NonNull String password);
 }
