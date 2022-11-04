@@ -105,9 +105,7 @@
     </div>
     <div class="item item2">
         <div style="font-size: 15px; padding-bottom: 9px; color: red">
-            <c:set var="message" value="${errorMessage}"/>
-            <%--            <c:if test="${not empty message}" >--%>
-            <h7 id="errorMessage"><c:out value="${message}"/> </h7>
+            <p>${requestScope.errorMessage}</p>
         </div>
         <div class="lgform">
 

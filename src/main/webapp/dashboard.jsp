@@ -297,19 +297,25 @@
 
   <div class="subcontain2">
 
+    <div>
+      Username: ${sessionScope.loggedUser.email}
+    </div>
 
     <div class="make-post">
       <form action="timeline" method="post" name="textform">
                     <textarea id="firsttextarea"
                               style="resize: vertical; overflow: auto; height: auto; display:block; border-radius: 7px; border: 2px solid lightskyblue"
-                              name="post_text"
+                              name="post-text"
                               id="" cols="70" rows="3"></textarea>
+        <input type="hidden" name="user-id" value=${sessionScope.loggedUser.id}>
         <button type="submit"
                 style="background-color: dodgerblue !important; color: white; width: 120px; padding:15px; margin-left: 15px">
           Post
         </button>
 
       </form>
+
+      <!--       -->
 
 
     </div>

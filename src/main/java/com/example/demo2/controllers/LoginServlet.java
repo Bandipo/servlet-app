@@ -26,17 +26,26 @@ public class LoginServlet extends HttpServlet {
 
         // validate if the user exists in Database
 
-       User foundUser = userDao.findUserByEmailAndPassword(email, password);
+        User foundUser = userDao.findUserByEmailAndPassword(email, password);
+
+        // if the user is not found
+
+
+
+        if(foundUser == null){
+            request.setAttribute("errorMessage", "User Not Found, Kindly register");
+            request.getRequestDispatcher("/home.jsp").forward(request, response);
+        }
 
 
 
         // store the user in session
 
-       if(foundUser != null){
+
            HttpSession requestSession = request.getSession();
 
            requestSession.setAttribute("loggedUser", foundUser);
-       }
+
 
         // redirect to dashboard.jsp
 
